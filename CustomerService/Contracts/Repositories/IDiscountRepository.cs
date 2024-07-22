@@ -6,5 +6,6 @@ namespace CustomerService.Contracts.Repositories
     {
         Task<bool> Add(Discount discount);
         bool ExistByCoupon(string coupon);
+        IEnumerable<Discount> GetCouponUsage();
     }
 }
