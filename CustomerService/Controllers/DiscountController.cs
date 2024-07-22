@@ -1,4 +1,5 @@
-﻿using CustomerService.Contracts.Services;
+﻿using CSharpFunctionalExtensions;
+using CustomerService.Contracts.Services;
 using CustomerService.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,10 +29,5 @@ namespace CustomerService.Controllers
             
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAsCsv()
-        {
-            return Ok("CSV");
-        }
     }
 }

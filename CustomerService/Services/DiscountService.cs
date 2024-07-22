@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
 using CSharpFunctionalExtensions.ValueTasks;
+using CsvHelper;
 using CustomerService.Contracts.Repositories;
 using CustomerService.Contracts.Services;
 using CustomerService.Dtos;
 using CustomerService.Entities;
+using System.Globalization;
 using System.Net.Http;
 using System.Text;
 using System.Xml;
@@ -35,7 +37,7 @@ namespace CustomerService.Services
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
 
-                    // Check if the response is HTML
+                   
                     if (responseString.TrimStart().StartsWith("<html>"))
                     {
                         Console.WriteLine("Received an HTML response, likely an error page.");
@@ -47,12 +49,12 @@ namespace CustomerService.Services
                         var xmlDoc = new XmlDocument();
                         xmlDoc.LoadXml(responseString);
 
-                        // Create a namespace manager and add the namespaces
+                        
                         var namespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
                         namespaceManager.AddNamespace("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
                         namespaceManager.AddNamespace("tempuri", "http://tempuri.org");
 
-                        // Check if the FindPersonResponse node has any child nodes
+                        
                         var findPersonResponseNode = xmlDoc.SelectSingleNode("//SOAP-ENV:Body/tempuri:FindPersonResponse", namespaceManager);
                         if (findPersonResponseNode != null && findPersonResponseNode.HasChildNodes)
                         {
@@ -62,20 +64,20 @@ namespace CustomerService.Services
                     }
                     catch (XmlException ex)
                     {
-                        // Log the exception or handle it as necessary
+                        
                         Console.WriteLine($"XML Parsing Error: {ex.Message}");
                         Console.WriteLine($"Response Content: {responseString}");
                     }
                 }
                 else
                 {
-                    // Log the status code or handle it as necessary
+                    
                     Console.WriteLine($"Error: Service returned status code {response.StatusCode}");
                 }
             }
             catch (HttpRequestException ex)
             {
-                // Handle network errors or service unavailability
+                
                 Console.WriteLine($"Request Error: {ex.Message}");
             }
 
@@ -103,5 +105,8 @@ namespace CustomerService.Services
             }
             return Result.Success<DiscountDto, IEnumerable<string>>(discountDto);
         }
+
+        
+        
     }
 }

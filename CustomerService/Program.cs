@@ -23,7 +23,7 @@ builder.Services.AddScoped<IDiscountService, DiscountService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
-
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

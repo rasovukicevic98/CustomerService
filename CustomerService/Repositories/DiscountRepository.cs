@@ -29,6 +29,12 @@ namespace CustomerService.Repositories
             return false;
         }
 
+        public IEnumerable<Discount> GetCouponUsage()
+        {
+            return _context.Discounts.Where(c => c.IsUsed == true);
+            
+        }
+
         public bool Save()
         {
             return _context.SaveChanges() > 0;
