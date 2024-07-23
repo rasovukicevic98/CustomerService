@@ -23,7 +23,7 @@ namespace CustomerService.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(DiscountDto discountDto)
         { 
-            var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            var username = HttpContext.User.FindFirstValue(ClaimTypes.Email);
             var res = await _service.CreateDiscount(discountDto, username);
             if (res.IsFailure)
             {

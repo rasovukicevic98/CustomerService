@@ -17,6 +17,18 @@ namespace CustomerService.Repositories
         {
             return await _context.Agents.FirstOrDefaultAsync(a => a.Username == username);
         }
+
+        public IQueryable<string> GetAgentsEmails()
+        {
+            return _context.Agents
+                .AsNoTracking()
+                .Select(a => a.Email);
+        }
+
+        public async Task<Agent> GetByEmail(string email)
+        {
+            return await _context.Agents.FirstOrDefaultAsync(a => a.Email == email);
+        }
         
     }
 }

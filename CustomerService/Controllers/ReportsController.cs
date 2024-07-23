@@ -1,6 +1,7 @@
 ﻿using CustomerService.Contracts.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CustomerService.Controllers
 {
@@ -17,7 +18,8 @@ namespace CustomerService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsCsv()
         {
-            var res = await _service.GenerateReportAsCsv();
+            var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            var res = await _service.GenerateReportAsCsvForEndpointAsync(email);
             if (res.IsFailure)
             {
                 return Ok(res.Error);

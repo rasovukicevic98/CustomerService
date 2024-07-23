@@ -32,7 +32,7 @@ namespace CustomerService.Repositories
 
         public IEnumerable<Discount> GetCouponUsage()
         {
-            return _context.Discounts.Where(c => c.IsUsed == true);
+            return _context.Discounts.Where(c => c.IsUsed == true).Include(c=>c.Agent);
             
         }
         public async Task<int> CouponsMadeToday(Agent agent)

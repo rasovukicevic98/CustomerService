@@ -30,6 +30,10 @@ namespace CustomerService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgentId"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -44,42 +48,50 @@ namespace CustomerService.Migrations
 
                     b.HasKey("AgentId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Agents");
 
                     b.HasData(
                         new
                         {
                             AgentId = 1,
+                            Email = "agent1@example.com",
                             Name = "Agent One",
-                            Password = "AQAAAAIAAYagAAAAEKjt9ShHhDiqGEJWk2zhqgXCn84gEeYsjElwkgs2G7uQCJ9OBhKajKd3DfKcCcSuQA==",
+                            Password = "AQAAAAIAAYagAAAAEDd+HE+JFrQT8KjI5fzbwlqhe3t9sPnXCM4CSXI981R/Ttr4ZCwLOE2eK0XoipP6kA==",
                             Username = "agent1"
                         },
                         new
                         {
                             AgentId = 2,
+                            Email = "agent2@example.com",
                             Name = "Agent Two",
-                            Password = "AQAAAAIAAYagAAAAEHTUAruJASBw/I8Pzrf/Oeh5DPVhMz2CtN+VGT8TfVOCDMgUUCKEIlwMvIqRaMYRQQ==",
+                            Password = "AQAAAAIAAYagAAAAEITDww9U3iWycyWoeRyHMLlo9Ey0m92gM/2P0wYiGWobnGDJlCF/NGgxMKYHXneKyw==",
                             Username = "agent2"
                         },
                         new
                         {
                             AgentId = 3,
+                            Email = "agent3@example.com",
                             Name = "Agent Three",
-                            Password = "AQAAAAIAAYagAAAAEO2ensguN3s1qYZv8O3rxJlq1rzug/OBD3OTBGnsOZtMNf2LGhxQ+5Ra/URLDthnLw==",
+                            Password = "AQAAAAIAAYagAAAAECZti7b9lI2EV0OrKbqDeSv6Bd43AI04XaB2SUch5RtWZQLNiwlP3pI2/hdLIqmicw==",
                             Username = "agent3"
                         },
                         new
                         {
                             AgentId = 4,
+                            Email = "agent4@example.com",
                             Name = "Agent Four",
-                            Password = "AQAAAAIAAYagAAAAEPag72ZcnJmBl6cZzv3q4dmgXX1TtiFDAm64m0EAiQXNd+6hLMUueuru8f/MOOkZjQ==",
+                            Password = "AQAAAAIAAYagAAAAEAb8/CeIi5vnt10JZGUQKedYbNw6pxJ97EbQmpyj1LchCcSDyTKVVwaWtTqXT+Drdg==",
                             Username = "agent4"
                         },
                         new
                         {
                             AgentId = 5,
+                            Email = "agent5@example.com",
                             Name = "Agent Five",
-                            Password = "AQAAAAIAAYagAAAAEBZdxYRKYLZejbKD2IJMAMVU7aGmqZf6Jj4NaTo1YzKNz3nk9l1noDnL/4ddrcbGaQ==",
+                            Password = "AQAAAAIAAYagAAAAEBZ6S2xW2nUHG3DBUs1is7lH+qfHmMg5pMLA38Bp2tH0o0ktwd6I85seei6apctNsg==",
                             Username = "agent5"
                         });
                 });
@@ -113,6 +125,10 @@ namespace CustomerService.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

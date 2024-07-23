@@ -30,7 +30,7 @@ namespace CustomerService.Services
             _httpClient = httpClient;
             _agentRepository = agentRepository;
         }
-        private async Task<bool> UserExistsAsync(int userId)
+        private async Task<(bool exists, string userName)> UserExistsAsync(int userId)
         {
             var url = $"https://www.crcind.com/csp/samples/SOAP.Demo.cls?soap_method=FindPerson&id={userId}";
 
@@ -46,7 +46,7 @@ namespace CustomerService.Services
                     if (responseString.TrimStart().StartsWith("<html>"))
                     {
                         Console.WriteLine("Received an HTML response, likely an error page.");
-                        return false;
+                        return (false, null);
                     }
 
                     try
@@ -64,7 +64,10 @@ namespace CustomerService.Services
                         if (findPersonResponseNode != null && findPersonResponseNode.HasChildNodes)
                         {
                             var nameNode = findPersonResponseNode.SelectSingleNode("tempuri:FindPersonResult/tempuri:Name", namespaceManager);
-                            return nameNode != null;
+                            if (nameNode != null)
+                            {
+                                return (true, nameNode.InnerText);
+                            }
                         }
                     }
                     catch (XmlException ex)
@@ -86,18 +89,18 @@ namespace CustomerService.Services
                 Console.WriteLine($"Request Error: {ex.Message}");
             }
 
-            return false;
+            return (false, null);
         }
 
-        public async Task<Result<DiscountDto, IEnumerable<string>>> CreateDiscount(DiscountDto discountDto, string agentUsername)
+        public async Task<Result<DiscountDto, IEnumerable<string>>> CreateDiscount(DiscountDto discountDto, string agentEmail)
         {
-            var agent = await _agentRepository.GetByUsernameAsync(agentUsername);
+            var agent = await _agentRepository.GetByEmail(agentEmail);
             if (agent == null)
             {
                 return Result.Failure<DiscountDto, IEnumerable<string>>(new List<string> { "The agent does not exist." });
             }
-
-            if (!await UserExistsAsync(discountDto.UserId))
+            var (userExists, userName) = await UserExistsAsync(discountDto.UserId);
+            if (!userExists)
             {
                 return Result.Failure<DiscountDto, IEnumerable<string>>(new List<string> { "The user does not exist." });
             }
@@ -115,11 +118,13 @@ namespace CustomerService.Services
             discount.CouponStartDate = DateTime.Now;
             discount.CouponEndDate = discount.CouponStartDate.AddMonths(1);
             discount.Agent = agent;
+            discount.Username = userName;
             var res = await _repository.Add(discount);
             if (!res)
             {
                 return Result.Failure<DiscountDto, IEnumerable<string>>(new List<string> { "There has been an error while saving the discount!" });
             }
+            
             return Result.Success<DiscountDto, IEnumerable<string>>(discountDto);
         }
 
