@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240722100215_AddDiscount")]
-    partial class AddDiscount
+    [Migration("20240722183555_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,23 @@ namespace CustomerService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CustomerService.Entities.Agent", b =>
+                {
+                    b.Property<int>("AgentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgentId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AgentId");
+
+                    b.ToTable("Agents");
+                });
+
             modelBuilder.Entity("CustomerService.Entities.Discount", b =>
                 {
                     b.Property<int>("Id")
@@ -33,11 +50,14 @@ namespace CustomerService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateOnly>("CouponEndDate")
-                        .HasColumnType("date");
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
 
-                    b.Property<DateOnly>("CouponStartDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("CouponEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CouponStartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DiscountCoupon")
                         .IsRequired()
@@ -46,12 +66,28 @@ namespace CustomerService.Migrations
                     b.Property<int>("DiscountPercentage")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AgentId");
+
                     b.ToTable("Discounts");
+                });
+
+            modelBuilder.Entity("CustomerService.Entities.Discount", b =>
+                {
+                    b.HasOne("CustomerService.Entities.Agent", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Agent");
                 });
 #pragma warning restore 612, 618
         }

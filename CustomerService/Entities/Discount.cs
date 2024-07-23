@@ -9,5 +9,7 @@
         public DateTime CouponEndDate { get; set; }
         public int DiscountPercentage { get; set; }
         public bool IsUsed { get; set; } = false;
+        public int AgentId { get; set; }
+        public Agent Agent {  get; set; }
     }
 }

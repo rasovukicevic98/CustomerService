@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240722114717_AlterDiscount")]
-    partial class AlterDiscount
+    [Migration("20240722183808_AddPassword")]
+    partial class AddPassword
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,31 @@ namespace CustomerService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CustomerService.Entities.Agent", b =>
+                {
+                    b.Property<int>("AgentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgentId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AgentId");
+
+                    b.ToTable("Agents");
+                });
+
             modelBuilder.Entity("CustomerService.Entities.Discount", b =>
                 {
                     b.Property<int>("Id")
@@ -32,6 +57,9 @@ namespace CustomerService.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CouponEndDate")
                         .HasColumnType("datetime2");
@@ -54,7 +82,20 @@ namespace CustomerService.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AgentId");
+
                     b.ToTable("Discounts");
+                });
+
+            modelBuilder.Entity("CustomerService.Entities.Discount", b =>
+                {
+                    b.HasOne("CustomerService.Entities.Agent", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Agent");
                 });
 #pragma warning restore 612, 618
         }

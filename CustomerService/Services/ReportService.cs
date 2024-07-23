@@ -39,7 +39,7 @@ namespace CustomerService.Services
         public async Task<Result<MemoryStream, IEnumerable<string>>> GenerateReportAsCsv()
         {
             var exist = _repository.GetCouponUsage().Where(c => c.IsUsed == true);
-            if (exist == null)
+            if (exist == null || !exist.Any())
             {
                 return Result.Failure<MemoryStream, IEnumerable<string>>(new List<string> { "There is no data." });
             }
@@ -52,8 +52,8 @@ namespace CustomerService.Services
 
         public async Task<Result<IEnumerable<CSVDto>, IEnumerable<string>>> GenerateReportForAllAgents()
         {
-            var exist = _repository.GetCouponUsage().Where(c => c.IsUsed == true);
-            if (exist == null)
+            var exist = _repository.GetCouponUsage();
+            if (exist == null || !exist.Any())
             {
                 return Result.Failure<IEnumerable<CSVDto>, IEnumerable<string>>(new List<string> { "There is no data." });
             }
