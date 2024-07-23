@@ -1,6 +1,7 @@
 ﻿using CustomerService.Contracts.Repositories;
 using CustomerService.Data;
 using CustomerService.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomerService.Repositories
 {
@@ -34,7 +35,10 @@ namespace CustomerService.Repositories
             return _context.Discounts.Where(c => c.IsUsed == true);
             
         }
-
+        public async Task<int> CouponsMadeToday(Agent agent)
+        {
+            return await _context.Discounts.CountAsync(d => d.AgentId == agent.AgentId && d.CouponStartDate.Date == DateTime.Today);
+        }
         public bool Save()
         {
             return _context.SaveChanges() > 0;

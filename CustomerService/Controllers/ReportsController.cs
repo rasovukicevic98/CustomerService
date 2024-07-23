@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace CustomerService.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     public class ReportsController : ControllerBase
     {
         private readonly IReportService _service;
