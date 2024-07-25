@@ -1,10 +1,12 @@
 ﻿using CustomerService.Contracts.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace CustomerService.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class ReportsController : ControllerBase
     {

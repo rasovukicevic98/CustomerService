@@ -1,4 +1,5 @@
 ﻿using CustomerService.Configuration;
+using CustomerService.Contracts;
 using CustomerService.Contracts.Repositories;
 using CustomerService.Contracts.Services;
 using CustomerService.Data;
@@ -125,7 +126,7 @@ namespace CustomerService.Extensions
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
-
+            services.AddHttpClient<IUserServiceAdapter, SoapUserServiceAdapter>();
             services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
             services.AddScoped<IEmailService, EmailService>();
 
