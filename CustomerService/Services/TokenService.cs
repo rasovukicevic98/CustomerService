@@ -20,7 +20,7 @@ namespace CustomerService.Services
         {
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, agent.Username),
+            new Claim(ClaimTypes.Email, agent.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

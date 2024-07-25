@@ -20,10 +20,17 @@ namespace CustomerService.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Create a new Discount coupon.
+        /// </summary>
+        /// <param name="discountDto">The details of the discount coupon to create.</param>
+        /// <returns>Returns the created discount coupon if successful; otherwise, returns a bad request.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(DiscountDto discountDto)
         { 
-            var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            var username = HttpContext.User.FindFirstValue(ClaimTypes.Email);
             var res = await _service.CreateDiscount(discountDto, username);
             if (res.IsFailure)
             {
