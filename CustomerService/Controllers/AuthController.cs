@@ -16,7 +16,14 @@ namespace CustomerService.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Authenticates a user based on username and password.
+        /// </summary>
+        /// <param name="loginDto"> The Login details of the user.</param>
+        /// <returns>Returns a token if the login attempt was successful, otherwise returns a bad request.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var res = await _authService.LoginRequest(loginDto);

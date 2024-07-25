@@ -15,7 +15,13 @@ namespace CustomerService.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Generates a CSV report for a logged-in Agent.
+        /// </summary>
+        /// <returns>A CSV report for a logged-in Agent.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAsCsv()
         {
             var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
@@ -30,7 +36,13 @@ namespace CustomerService.Controllers
             return File(memoryStream, "text/csv", fileName);
         }
 
+        /// <summary>
+        /// Generates and returns a report that contains all users that have used their coupon, no matter the Agent.
+        /// </summary>
+        /// <returns>A report for all Agents.</returns>
         [HttpGet("all-agents-report")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAllAgents()
         {
             var res = await _service.GenerateReportForAllAgents();
